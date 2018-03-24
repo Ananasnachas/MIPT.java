@@ -1,47 +1,62 @@
+package fifteenPuzzles.time;
+
+import fifteenPuzzles.Main;
+import fifteenPuzzles.file.FileUtils;
+import fifteenPuzzles.windows.ErrorWindow;
 import javafx.scene.text.Text;
 
 import java.time.*;
 
-public class Timer implements Runnable{
+public class Timer implements Runnable {
     private Text text;
     private static LocalDateTime startTime;
+    private static boolean wasStoped;
 
-    Timer(Text text){
+    public Timer(Text text){
         this.text = text;
         startTime = getTime();
+        wasStoped = false;
+    }
+
+    public static void stop(){
+        wasStoped = true;
     }
 
     @Override
     public void run() {
+        Main main = new Main();
+
         Duration duration;
         int mins = 0;
         int seconds = 0;
-        Time time = new Time();
+        TimeUtils time = new TimeUtils();
 
-        while (!Main.primaryStage.isShowing()) {
+        while(!main.isPrimaryStageShowing()){
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                ErrorWindow ew = new ErrorWindow(e);
+                throw new RuntimeException(e);
             }
         }
 
-        while (!Main.wasConfigurationSolved && Main.primaryStage.isShowing()) {
+        while (!wasStoped && main.isPrimaryStageShowing()) {
             duration = Duration.between(startTime, getTime());
             mins = (int) duration.getSeconds() / 60;
             seconds = (int) duration.getSeconds() % 60;
 
-            text.setText(new Time().toString(mins * 60 + seconds));
+            text.setText(new TimeUtils().toString(mins, seconds));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                ErrorWindow ew = new ErrorWindow(e);
+                throw new RuntimeException(e);
             }
         }
 
-        if (Main.wasConfigurationSolved)
+        if (wasStoped)
             if (time.isNewTimeBetter(mins * 60 + seconds))
-                time.setRecords(mins * 60 + seconds);
+                new FileUtils().setRecords(mins,seconds);
     }
 
     private LocalDateTime getTime(){

@@ -1,3 +1,8 @@
+package fifteenPuzzles.windows.gameWindow;
+
+import fifteenPuzzles.file.FileUtils;
+import fifteenPuzzles.time.Timer;
+import fifteenPuzzles.windows.ErrorWindow;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,19 +14,24 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
 
-public class InformationField {
-    private int size = Main.size;
+public class InformationField extends Pane {
+    private int size;
 
-    Parent makeFill() {
+    public InformationField(int size) {
+        this.size = size;
+        getChildren().add(makeFill());
+        getChildren().add(makeText());
+    }
+
+    private Parent makeFill() {
         ImageView image = null;
 
         try {
             image = new ImageView(new Image(new FileInputStream(new File("images/staticField.png"))));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            ErrorWindow ew = new ErrorWindow(e);
+            throw new UncheckedIOException(e);
         }
         image.setFitWidth(2 * size);
         image.setFitHeight(4 * size);
@@ -31,8 +41,8 @@ public class InformationField {
         return new Pane(image);
     }
 
-    Parent makeText(){
-        String[] rec = new Time().getRecords();
+    private Parent makeText(){
+        String[] rec = new FileUtils().getRecords();
 
         Text time = new Text(4.8 * size, size,"00:00");
         Thread thread = new Thread(new Timer(time));
@@ -52,7 +62,7 @@ public class InformationField {
     }
 
     private void setTextStile(Text text){
-        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, size/4));
         text.setFill(Color.BLUE);
     }
 }
