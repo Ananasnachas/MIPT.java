@@ -1,11 +1,11 @@
-package fifteenPuzzles.time;
+package main.java.puzzles.time;
 
-import fifteenPuzzles.file.FileUtils;
+import main.java.puzzles.utils.FileUtils;
 
 public class TimeUtils {
 
     public boolean isNewTimeBetter(int seconds){
-        String[] records = new FileUtils().getRecords();
+        String[] records = FileUtils.getRecords();
         return seconds < parse(records[0]) || seconds < parse(records[1]) || seconds < parse(records[2]);
     }
 

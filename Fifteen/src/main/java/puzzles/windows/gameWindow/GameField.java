@@ -1,8 +1,8 @@
-package fifteenPuzzles.windows.gameWindow;
+package main.java.puzzles.windows.gameWindow;
 
-import fifteenPuzzles.time.Timer;
-import fifteenPuzzles.windows.ErrorWindow;
-import fifteenPuzzles.windows.FinalWindow;
+import main.java.puzzles.time.MyDuration;
+import main.java.puzzles.windows.ErrorWindow;
+import main.java.puzzles.windows.FinalWindow;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
@@ -11,7 +11,7 @@ import java.io.UncheckedIOException;
 import java.util.Random;
 
 public class GameField extends Pane{
-    private static Cell[] cells = new Cell[16];
+    private Cell[] cells = new Cell[16];
     private int size;
 
     public GameField(int size){
@@ -36,7 +36,7 @@ public class GameField extends Pane{
             try {
                 cells[numbers[i]] = new Cell(numbers[i]+".png",i%4,i/4, numbers[i], size);
             } catch (FileNotFoundException e) {
-                ErrorWindow ew = new ErrorWindow(e);
+                new ErrorWindow(e);
                 throw new UncheckedIOException(e);
             }
         }
@@ -80,19 +80,15 @@ public class GameField extends Pane{
     private void move() {
         for (Cell cell : cells) {
             cell.setOnMouseClicked(e -> {
-                if (canCellMove(cell))
+                if (cell.canCellMove(cells[0]))
                     moveCells(cell, cells[0]);
 
                 if (isConfigurationRight()) {
-                    Timer.stop();
-                    FinalWindow fs = new FinalWindow();
+                    MyDuration.stop();
+                    new FinalWindow();
                 }
             });
         }
-    }
-
-    private boolean canCellMove(Cell cell){
-        return (cell.getPositionX() == cells[0].getPositionX() || cell.getPositionY() == cells[0].getPositionY()) && cell.getNumber() != 0;
     }
 
     private void moveCells(Cell clicked, Cell empty) {

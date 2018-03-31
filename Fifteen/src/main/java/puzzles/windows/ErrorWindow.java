@@ -1,7 +1,7 @@
-package fifteenPuzzles.windows;
+package main.java.puzzles.windows;
 
 import javafx.scene.control.Alert;
-import fifteenPuzzles.time.Timer;
+import main.java.puzzles.time.MyDuration;
 
 public class ErrorWindow extends Alert{
     public ErrorWindow(Exception e) {
@@ -12,7 +12,7 @@ public class ErrorWindow extends Alert{
     private void showError(Exception e) {
         setTitle("Error");
         setHeaderText(e.getMessage());
-        Timer.stop();
+        MyDuration.stop();
         showAndWait();
     }
 }

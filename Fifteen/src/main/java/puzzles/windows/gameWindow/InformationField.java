@@ -1,8 +1,8 @@
-package fifteenPuzzles.windows.gameWindow;
+package main.java.puzzles.windows.gameWindow;
 
-import fifteenPuzzles.file.FileUtils;
-import fifteenPuzzles.time.Timer;
-import fifteenPuzzles.windows.ErrorWindow;
+import main.java.puzzles.time.MyDuration;
+import main.java.puzzles.utils.FileUtils;
+import main.java.puzzles.windows.ErrorWindow;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,27 +25,26 @@ public class InformationField extends Pane {
     }
 
     private Parent makeFill() {
-        ImageView image = null;
+        try(FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/images/staticField.png"))) {
 
-        try {
-            image = new ImageView(new Image(new FileInputStream(new File("images/staticField.png"))));
-        } catch (FileNotFoundException e) {
-            ErrorWindow ew = new ErrorWindow(e);
+            ImageView image = new ImageView(new Image(fileInputStream));
+            image.setFitWidth(2 * size);
+            image.setFitHeight(4 * size);
+            image.setTranslateX(4 * size);
+            image.setTranslateY(0);
+
+            return new Pane(image);
+        } catch (IOException e) {
+            new ErrorWindow(e);
             throw new UncheckedIOException(e);
         }
-        image.setFitWidth(2 * size);
-        image.setFitHeight(4 * size);
-        image.setTranslateX(4 * size);
-        image.setTranslateY(0);
-
-        return new Pane(image);
     }
 
     private Parent makeText(){
-        String[] rec = new FileUtils().getRecords();
+        String[] rec = FileUtils.getRecords();
 
         Text time = new Text(4.8 * size, size,"00:00");
-        Thread thread = new Thread(new Timer(time));
+        Thread thread = new Thread(new MyDuration(time));
         thread.start();
         setTextStile(time);
 
