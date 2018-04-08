@@ -1,6 +1,5 @@
 package main.java.puzzles.time;
 
-import main.java.puzzles.Main;
 import main.java.puzzles.utils.FileUtils;
 import main.java.puzzles.windows.ErrorWindow;
 import javafx.scene.text.Text;
@@ -30,7 +29,7 @@ public class MyDuration implements Runnable {
         int seconds = 0;
         TimeUtils time = new TimeUtils();
 
-        while(!Main.isPrimaryStageShowing()){
+        while(text.getScene() == null){
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -39,7 +38,8 @@ public class MyDuration implements Runnable {
             }
         }
 
-        while (!wasStoped && Main.isPrimaryStageShowing()) {
+
+        while (!wasStoped && text.getScene().getWindow().isShowing()) {
             duration = Duration.between(startTime, getTime());
             mins = (int) duration.getSeconds() / 60;
             seconds = (int) duration.getSeconds() % 60;

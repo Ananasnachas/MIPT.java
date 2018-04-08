@@ -85,7 +85,7 @@ public class GameField extends Pane{
 
                 if (isConfigurationRight()) {
                     MyDuration.stop();
-                    new FinalWindow();
+                    new FinalWindow(this);
                 }
             });
         }
